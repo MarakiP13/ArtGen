@@ -1,0 +1,44 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" rx="32" fill="#16161a"/>
+  <!-- Neon concentric circles -->
+  <circle cx="120" cy="120" r="90" fill="url(#bluegreen)" opacity="0.18"/>
+  <circle cx="120" cy="120" r="72" fill="url(#pinkblue)" opacity="0.18"/>
+  <circle cx="120" cy="120" r="48" fill="url(#yellowgreen)" opacity="0.18"/>
+  <circle cx="120" cy="120" r="24" fill="url(#tealviolet)" opacity="0.22"/>
+  <circle cx="120" cy="120" r="8" fill="#00fff7"/>
+  <!-- Neon gradients -->
+  <ellipse cx="120" cy="120" rx="70" ry="16" fill="url(#pinkblue)" opacity="0.45"/>
+  <ellipse cx="120" cy="120" rx="44" ry="8" fill="url(#bluegreen)" opacity="0.45"/>
+  <!-- Minimal circuit trace -->
+  <path d="M120 120 Q160 80 200 120" stroke="#00fff7" stroke-width="2.5" fill="none"/>
+  <circle cx="200" cy="120" r="4" fill="#00fff7"/>
+  <!-- Outer glow -->
+  <g filter="url(#glowecho)">
+    <ellipse cx="120" cy="120" rx="90" ry="90" fill="#ff5edc" opacity="0.13"/>
+  </g>
+  <defs>
+    <linearGradient id="pinkblue" x1="76" y1="120" x2="164" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff5edc"/>
+      <stop offset="1" stop-color="#00fff7"/>
+    </linearGradient>
+    <linearGradient id="bluegreen" x1="50" y1="120" x2="190" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00fff7"/>
+      <stop offset="1" stop-color="#39ff14"/>
+    </linearGradient>
+    <linearGradient id="yellowgreen" x1="80" y1="120" x2="160" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffe600"/>
+      <stop offset="1" stop-color="#39ff14"/>
+    </linearGradient>
+    <linearGradient id="tealviolet" x1="100" y1="60" x2="140" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00fff7"/>
+      <stop offset="1" stop-color="#b983ff"/>
+    </linearGradient>
+    <filter id="glowecho" x="0" y="0" width="240" height="240" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

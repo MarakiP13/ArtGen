@@ -1,0 +1,60 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" rx="32" fill="#130c1c"/>
+  <!-- Main neon moon -->
+  <ellipse cx="150" cy="100" rx="36" ry="36" fill="url(#radial1)"/>
+  <ellipse cx="146" cy="104" rx="28" ry="28" fill="url(#radial2)" opacity="0.55"/>
+  <!-- Neon gradients -->
+  <ellipse cx="150" cy="100" rx="44" ry="16" fill="url(#pinkblue)" opacity="0.9"/>
+  <ellipse cx="120" cy="160" rx="44" ry="18" fill="url(#bluegreen)" opacity="0.65"/>
+  <ellipse cx="120" cy="140" rx="72" ry="32" fill="url(#purplepink)" opacity="0.55"/>
+  <ellipse cx="120" cy="180" rx="60" ry="12" fill="url(#yellowgreen)" opacity="0.35"/>
+  <ellipse cx="180" cy="120" rx="18" ry="54" fill="url(#tealviolet)" opacity="0.35"/>
+  <!-- Circuit traces -->
+  <path d="M150 100 Q180 120 140 160" stroke="#00fff7" stroke-width="2.5" fill="none"/>
+  <circle cx="140" cy="160" r="4" fill="#00fff7"/>
+  <path d="M150 100 Q110 140 80 120" stroke="#ff5edc" stroke-width="2.5" fill="none"/>
+  <circle cx="80" cy="120" r="4" fill="#ff5edc"/>
+  <!-- Neon base -->
+  <rect x="60" y="200" width="120" height="8" rx="4" fill="#00fff7" opacity="0.23"/>
+  <!-- Outer glow -->
+  <g filter="url(#glow)">
+    <ellipse cx="120" cy="120" rx="80" ry="80" fill="#00fff7" opacity="0.13"/>
+  </g>
+  <defs>
+    <linearGradient id="pinkblue" x1="106" y1="100" x2="194" y2="100" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff5edc"/>
+      <stop offset="1" stop-color="#00fff7"/>
+    </linearGradient>
+    <linearGradient id="bluegreen" x1="76" y1="160" x2="164" y2="160" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00fff7"/>
+      <stop offset="1" stop-color="#39ff14"/>
+    </linearGradient>
+    <linearGradient id="purplepink" x1="48" y1="140" x2="192" y2="140" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#b983ff"/>
+      <stop offset="1" stop-color="#ff5edc"/>
+    </linearGradient>
+    <linearGradient id="yellowgreen" x1="60" y1="180" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffe600"/>
+      <stop offset="1" stop-color="#39ff14"/>
+    </linearGradient>
+    <linearGradient id="tealviolet" x1="162" y1="66" x2="198" y2="174" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00fff7"/>
+      <stop offset="1" stop-color="#b983ff"/>
+    </linearGradient>
+    <radialGradient id="radial1" cx="0" cy="0" r="1" gradientTransform="translate(150 100) scale(36)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff"/>
+      <stop offset="1" stop-color="#ff5edc"/>
+    </radialGradient>
+    <radialGradient id="radial2" cx="0" cy="0" r="1" gradientTransform="translate(146 104) scale(28)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00fff7"/>
+      <stop offset="1" stop-color="#fff"/>
+    </radialGradient>
+    <filter id="glow" x="0" y="0" width="240" height="240" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

@@ -1,0 +1,36 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" rx="32" fill="#1c0c1a"/>
+  <!-- Neon lightning bolt -->
+  <polygon points="120,60 132,120 108,120 128,180 120,120 140,120" fill="url(#bolt)"/>
+  <!-- Neon arcs -->
+  <ellipse cx="120" cy="150" rx="48" ry="12" fill="url(#arc1)" opacity="0.45"/>
+  <ellipse cx="120" cy="180" rx="32" ry="8" fill="url(#arc2)" opacity="0.45"/>
+  <!-- Circuit trace -->
+  <path d="M120 120 Q160 80 200 120" stroke="#ff5edc" stroke-width="2.5" fill="none"/>
+  <circle cx="200" cy="120" r="4" fill="#ff5edc"/>
+  <!-- Outer glow -->
+  <g filter="url(#glow)">
+    <ellipse cx="120" cy="120" rx="90" ry="90" fill="#00fff7" opacity="0.13"/>
+  </g>
+  <defs>
+    <linearGradient id="bolt" x1="120" y1="60" x2="140" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffe600"/>
+      <stop offset="1" stop-color="#ff5edc"/>
+    </linearGradient>
+    <linearGradient id="arc1" x1="72" y1="150" x2="168" y2="150" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00fff7"/>
+      <stop offset="1" stop-color="#39ff14"/>
+    </linearGradient>
+    <linearGradient id="arc2" x1="88" y1="180" x2="152" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff5edc"/>
+      <stop offset="1" stop-color="#00fff7"/>
+    </linearGradient>
+    <filter id="glow" x="0" y="0" width="240" height="240" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

@@ -1,0 +1,36 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" rx="32" fill="#191c1c"/>
+  <!-- Neon hexagon (balance) -->
+  <polygon points="120,60 180,100 180,180 120,220 60,180 60,100" fill="url(#hex1)"/>
+  <polygon points="120,80 160,110 160,170 120,200 80,170 80,110" fill="url(#hex2)"/>
+  <!-- Neon circle (unity) -->
+  <circle cx="120" cy="140" r="30" fill="url(#circle1)"/>
+  <!-- Circuit trace -->
+  <path d="M120 140 Q160 100 200 140" stroke="#00fff7" stroke-width="2.5" fill="none"/>
+  <circle cx="200" cy="140" r="4" fill="#00fff7"/>
+  <!-- Outer glow -->
+  <g filter="url(#glow)">
+    <ellipse cx="120" cy="120" rx="90" ry="90" fill="#ff5edc" opacity="0.13"/>
+  </g>
+  <defs>
+    <linearGradient id="hex1" x1="60" y1="60" x2="180" y2="220" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00fff7"/>
+      <stop offset="1" stop-color="#ff5edc"/>
+    </linearGradient>
+    <linearGradient id="hex2" x1="80" y1="80" x2="160" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#39ff14"/>
+      <stop offset="1" stop-color="#ffe600"/>
+    </linearGradient>
+    <radialGradient id="circle1" cx="0" cy="0" r="1" gradientTransform="translate(120 140) scale(30)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff"/>
+      <stop offset="1" stop-color="#00fff7"/>
+    </radialGradient>
+    <filter id="glow" x="0" y="0" width="240" height="240" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

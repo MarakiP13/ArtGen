@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ConsciousCanvas - Dynamic Consciousness Art Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ConsciousCanvas</h1>
+            <p>Visualize your consciousness profile through unique art</p>
+            <div class="metric-descriptions">
+                <p><strong>Information Density (D):</strong> Your ability to process information quickly</p>
+                <p><strong>Knowledge Surface Area (A):</strong> The breadth and diversity of your knowledge</p>
+                <p><strong>Cognitive Complexity (S):</strong> Your adaptability and problem-solving capacity</p>
+            </div>
+        </header>
+
+        <main>
+            <div class="white-box">
+                <div class="archetype-display" style="min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;">
+    <span id="archetypeDisplay"></span>
+    <label class="toggle-wrap" style="display:block;margin:12px 0;">
+      <input type="checkbox" id="invertToggle">
+      <span class="slider"></span>
+      <span class="label">Show Opposite Profile</span>
+    </label>
+    <span id="oppositeArchetypeDisplay"></span>
+    <button id="showPairsBtn" class="btn" style="margin-top:10px;">Archetype Pairs</button>
+</div>
+            </div>
+
+            <div class="white-box">
+                <div class="white-box">
+                    <div class="parameter-group">
+                        <label for="informationDensity">Information Density (D)</label>
+                        <input type="range" id="informationDensity" min="0" max="100" value="50">
+                        <span class="value-display">50</span>
+                    </div>
+                </div>
+
+                <div class="white-box">
+                    <div class="parameter-group">
+                        <label for="knowledgeBase">Knowledge Base (A)</label>
+                        <input type="range" id="knowledgeBase" min="0" max="100" value="50">
+                        <span class="value-display">50</span>
+                    </div>
+                </div>
+
+                <div class="white-box">
+                    <div class="parameter-group">
+                        <label for="cognitiveComplexity">Cognitive Complexity (S)</label>
+                        <input type="range" id="cognitiveComplexity" min="0" max="100" value="50">
+                        <span class="value-display">50</span>
+                    </div>
+                </div>
+                
+                <div class="quantum-toggle">
+                    <span class="quantum-label">Quantum Mode</span>
+                    <div class="toggle-switch">
+  <label>
+    <input type="checkbox" id="quantumMode">
+    <span class="toggle-slider"></span>
+  </label>
+</div>
+                </div>
+                
+            </div>
+
+            <div class="white-box">
+                <div class="csci-display">
+                    <span>CSCI Value: </span>
+                    <span id="csciValue">0</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="randomizeBtn" class="btn">Randomize</button>
+                                <button id="saveBtn" class="btn">Save Art</button>
+                <button id="shareBtn" class="btn">Share</button>
+            </div>
+
+            <div class="white-box" style="margin-bottom:12px;">
+                <label for="mainModeSelect" style="font-weight:bold;">Visualization Mode:</label>
+                <select id="mainModeSelect" style="margin:0 0 0 10px; padding:4px 10px; font-size:16px;">
+                  <option value="regular">Regular Image Mode</option>
+                  <option value="visualizer">Consciousness Visualizer</option>
+                </select>
+            </div>
+            <button id="visualizerHelpBtn" class="icon-btn" title="Show legend / help for this visualization" style="margin-left:8px;display:inline-block;vertical-align:middle;width:36px;height:36px;border-radius:50%;font-size:1.5em;line-height:1;background:#f3f3f3;color:#333;border:1px solid #ccc;box-shadow:0 1px 3px rgba(0,0,0,0.06);cursor:pointer;">?</button>
+<div class="white-box" id="visualizerPanelMount" style="display:none;"></div>
+            <div class="white-box" id="artCanvasBox">
+                <div class="canvas-container">
+                    <canvas id="artCanvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Visualization Mode UI Hint -->
+            <div style="margin: 12px 0 28px 0; text-align: center; color: #555; font-size: 1em;">
+                <strong>New:</strong> Try <em>3D Model Export</em> to preview and (soon) export your consciousness as a 3D-printable model, or <em>Quantum Visualization</em> for unpredictable, quantum-inspired art!
+            </div>
+
+            <div class="generators-grid">
+                <!-- Top Right: Consciousness Card Generator -->
+                <div class="controls grid-cell">
+                    <h3>Consciousness Card Generator</h3>
+                    <div class="card-btn-row">
+                        <div class="card-btn-row" style="margin-top:auto; display:flex; gap:16px; justify-content:center;">
+                          <button id="drawYourCardBtn" class="btn">Draw Your Card</button>
+                          <button id="drawRandomCardBtn" class="btn">Draw Random Card</button>
+                          <button id="drawOppositeCardBtn" class="btn">Draw Your Opposite</button>
+                        </div>
+                    </div>
+                    <div id="cardDisplay" class="card-display" style="margin-top: 18px;"></div>
+                </div>
+                <!-- Bottom Left: Placeholder for future generator -->
+                <div class="controls grid-cell" id="face-generator-container">
+    <h3>Consciousness Face Generator</h3>
+    <div class="card-btn-row" style="margin-bottom:18px;">
+      <button id="downloadAvatarBtn" class="btn">Download Avatar</button>
+      <button id="showOriginalBtn" class="btn">Show Original</button>
+    </div>
+    <!-- The consciousness_face.js script will inject the face avatar here -->
+</div>
+                <!-- Bottom Right: Placeholder for future generator -->
+                <div class="controls grid-cell" id="task-matcher-container">
+  <!-- Task Matcher will be injected here by task_matcher.js -->
+</div>
+            </div>
+        </main>
+    </div>
+    <script src="utils.js"></script>
+    <script src="consciousness_card_generator_base64.js"></script>
+    <script src="script.js"></script>
+    <script src="consciousness_face.js"></script>
+    <script src="consciousness_visualizer_modes.js"></script>
+    <script src="task_matcher.js"></script>
+    <!-- Archetype Pairs Modal -->
+    <div id="pairsModal" class="modal" style="display:none;position:fixed;z-index:1000;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.6);justify-content:center;align-items:center;">
+      <div class="modal-content" style="background:#fff;padding:24px 32px;border-radius:12px;max-width:400px;position:relative;box-shadow:0 4px 24px rgba(0,0,0,0.15);">
+        <button id="closePairsModal" style="position:absolute;top:10px;right:18px;font-size:1.3em;background:none;border:none;cursor:pointer;">&times;</button>
+        <h2 style="margin-top:0;margin-bottom:16px;text-align:center;">Archetype–Opposite Pairs</h2>
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr><th style="text-align:left;padding:4px 8px;">Archetype</th><th style="text-align:left;padding:4px 8px;">Opposite</th></tr>
+          </thead>
+          <tbody id="pairsTableBody">
+            <!-- JS will populate rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+</body>
+</html>

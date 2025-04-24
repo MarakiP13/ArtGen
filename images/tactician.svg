@@ -1,0 +1,30 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" rx="32" fill="#0b1c16"/>
+  <!-- Neon grid and arrow -->
+  <rect x="40" y="120" width="160" height="4" rx="2" fill="url(#arrowline)"/>
+  <rect x="120" y="40" width="4" height="160" rx="2" fill="url(#arrowline)"/>
+  <polygon points="120,40 112,60 128,60" fill="#ff5edc"/>
+  <polygon points="120,200 112,180 128,180" fill="#00fff7"/>
+  <polygon points="40,120 60,112 60,128" fill="#39ff14"/>
+  <polygon points="200,120 180,112 180,128" fill="#b983ff"/>
+  <!-- Circuit trace -->
+  <path d="M120 120 Q160 80 200 120" stroke="#00fff7" stroke-width="2.5" fill="none"/>
+  <circle cx="200" cy="120" r="4" fill="#00fff7"/>
+  <!-- Outer glow -->
+  <g filter="url(#glow)">
+    <ellipse cx="120" cy="120" rx="90" ry="90" fill="#ff5edc" opacity="0.13"/>
+  </g>
+  <defs>
+    <linearGradient id="arrowline" x1="40" y1="120" x2="200" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00fff7"/>
+      <stop offset="1" stop-color="#ff5edc"/>
+    </linearGradient>
+    <filter id="glow" x="0" y="0" width="240" height="240" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

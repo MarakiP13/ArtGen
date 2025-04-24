@@ -1,0 +1,38 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" rx="32" fill="#180c1c"/>
+  <!-- Neon spiral -->
+  <path d="M120 180 Q140 140 120 120 Q100 100 120 60" stroke="url(#spiral)" stroke-width="7" fill="none"/>
+  <circle cx="120" cy="60" r="10" fill="#ff5edc"/>
+  <circle cx="120" cy="180" r="10" fill="#00fff7"/>
+  <!-- Neon ellipses -->
+  <ellipse cx="120" cy="120" rx="60" ry="18" fill="url(#purplepink)" opacity="0.45"/>
+  <ellipse cx="120" cy="120" rx="36" ry="8" fill="url(#bluegreen)" opacity="0.45"/>
+  <!-- Circuit trace -->
+  <path d="M120 120 Q160 80 200 120" stroke="#39ff14" stroke-width="2.5" fill="none"/>
+  <circle cx="200" cy="120" r="4" fill="#39ff14"/>
+  <!-- Outer glow -->
+  <g filter="url(#glow)">
+    <ellipse cx="120" cy="120" rx="90" ry="90" fill="#ff5edc" opacity="0.13"/>
+  </g>
+  <defs>
+    <linearGradient id="spiral" x1="120" y1="60" x2="120" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff5edc"/>
+      <stop offset="1" stop-color="#00fff7"/>
+    </linearGradient>
+    <linearGradient id="purplepink" x1="60" y1="120" x2="180" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#b983ff"/>
+      <stop offset="1" stop-color="#ff5edc"/>
+    </linearGradient>
+    <linearGradient id="bluegreen" x1="84" y1="120" x2="156" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00fff7"/>
+      <stop offset="1" stop-color="#39ff14"/>
+    </linearGradient>
+    <filter id="glow" x="0" y="0" width="240" height="240" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

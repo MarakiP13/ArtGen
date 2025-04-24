@@ -1,0 +1,41 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="240" rx="32" fill="#1a1f0c"/>
+  <!-- Neon pulse waves -->
+  <ellipse cx="120" cy="120" rx="80" ry="16" fill="url(#pulse1)" opacity="0.55"/>
+  <ellipse cx="120" cy="120" rx="60" ry="12" fill="url(#pulse2)" opacity="0.55"/>
+  <ellipse cx="120" cy="120" rx="40" ry="8" fill="url(#pulse3)" opacity="0.55"/>
+  <!-- Neon center -->
+  <circle cx="120" cy="120" r="16" fill="url(#center)"/>
+  <!-- Circuit trace -->
+  <path d="M120 120 Q160 80 200 120" stroke="#39ff14" stroke-width="2.5" fill="none"/>
+  <circle cx="200" cy="120" r="4" fill="#39ff14"/>
+  <!-- Outer glow -->
+  <g filter="url(#glow)">
+    <ellipse cx="120" cy="120" rx="90" ry="90" fill="#ff5edc" opacity="0.13"/>
+  </g>
+  <defs>
+    <linearGradient id="pulse1" x1="40" y1="120" x2="200" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff5edc"/>
+      <stop offset="1" stop-color="#00fff7"/>
+    </linearGradient>
+    <linearGradient id="pulse2" x1="60" y1="120" x2="180" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00fff7"/>
+      <stop offset="1" stop-color="#39ff14"/>
+    </linearGradient>
+    <linearGradient id="pulse3" x1="80" y1="120" x2="160" y2="120" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffe600"/>
+      <stop offset="1" stop-color="#ff5edc"/>
+    </linearGradient>
+    <radialGradient id="center" cx="0" cy="0" r="1" gradientTransform="translate(120 120) scale(16)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff"/>
+      <stop offset="1" stop-color="#00fff7"/>
+    </radialGradient>
+    <filter id="glow" x="0" y="0" width="240" height="240" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>
