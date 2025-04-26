@@ -1,23 +1,21 @@
 // Modular Consciousness Face Generator with Opposite Mode and Flip Animation
 
-const faceContainer = document.createElement("div");
-faceContainer.id = "faceAvatar";
-faceContainer.style.marginTop = "24px";
-faceContainer.style.textAlign = "center";
-faceContainer.innerHTML = `
-<svg id="faceSVG" viewBox="0 0 200 200" width="200" height="200" style="transition: transform 0.6s ease-in-out;">
-  <circle cx="100" cy="100" r="80" fill="#000" stroke="#0ff" stroke-width="3" />
-  <g id="eyes"></g>
-  <g id="mouth"></g>
-  <g id="ornaments"></g>
-</svg>
-<div style="margin-top: 12px;">
-  <button id="saveAvatarBtn" class="btn">Download Avatar</button>
-  <button id="flipAvatarBtn" class="btn" style="margin-left: 10px;">Show Opposite</button>
-</div>
-`;
+// Only inject the SVG/avatar into #faceAvatar (should exist in HTML)
+function injectFaceAvatar() {
+  const faceAvatarDiv = document.getElementById("faceAvatar");
+  if (!faceAvatarDiv) return;
+  faceAvatarDiv.innerHTML = `
+    <svg id="faceSVG" viewBox="0 0 200 200" width="200" height="200" style="transition: transform 0.6s ease-in-out;">
+      <circle cx="100" cy="100" r="80" fill="#000" stroke="#0ff" stroke-width="3" />
+      <g id="eyes"></g>
+      <g id="mouth"></g>
+      <g id="ornaments"></g>
+    </svg>
+  `;
+}
 
-document.querySelector("#face-generator-container").appendChild(faceContainer);
+// Inject SVG on load
+window.addEventListener("DOMContentLoaded", injectFaceAvatar);
 
 let isOppositeFace = false;
 
@@ -95,12 +93,14 @@ function downloadAvatar() {
   img.src = "data:image/svg+xml;base64," + btoa(svgData);
 }
 
-document.getElementById("saveAvatarBtn").addEventListener("click", downloadAvatar);
-document.getElementById("flipAvatarBtn").addEventListener("click", () => {
+// Attach listeners to static HTML buttons
+const downloadBtn = document.getElementById("downloadAvatarBtn");
+const flipBtn = document.getElementById("showOriginalBtn");
+if (downloadBtn) downloadBtn.addEventListener("click", downloadAvatar);
+if (flipBtn) flipBtn.addEventListener("click", () => {
   isOppositeFace = !isOppositeFace;
   const faceSVG = document.getElementById("faceSVG");
   faceSVG.style.transform = `rotateY(${isOppositeFace ? 180 : 0}deg)`;
-  const flipBtn = document.getElementById("flipAvatarBtn");
   flipBtn.textContent = isOppositeFace ? "Show Original" : "Show Opposite";
 
   const D = parseInt(document.getElementById('informationDensity').value);

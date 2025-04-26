@@ -48,6 +48,16 @@ header h1 {
     margin-bottom: 10px;
 }
 
+header h3 {
+    text-align: center;
+    margin-bottom: var(--spacing);
+}
+
+.controls.grid-cell h3 {
+    text-align: center;
+    margin-bottom: var(--spacing);
+}
+
 .controls {
     background: white;
     padding: var(--spacing);
@@ -77,19 +87,112 @@ input[type="range"] {
     text-align: right;
 }
 
+/* Meditation Overlay Styles */
+/* (removed empty .meditation-overlay ruleset) */
+
+/* Full-page dim overlay for meditation mode */
+.meditation-dim-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(30, 38, 69, 0.54);
+    z-index: 9998;
+    pointer-events: all;
+    transition: opacity 0.5s;
+}
+
+.meditation-dim-overlay.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.meditation-dim-exempt {
+    position: relative;
+    z-index: 10000;
+}
+
+
+
+@keyframes meditationPulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+.dimmed-ui {
+    opacity: 0.38;
+    pointer-events: none;
+    transition: opacity 0.5s;
+}
+
 /* Quantum Toggle Styles */
 .quantum-toggle {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
     margin-top: 15px;
     padding-top: 15px;
     border-top: 1px solid #eee;
 }
 
+.quantum-toggle .toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0;
+}
+
 .quantum-toggle label {
     font-weight: 500;
+    margin-bottom: 0;
 }
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider.round {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider.round:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+.switch input:checked + .slider.round {
+    background-color: var(--secondary-color);
+}
+
+.switch input:checked + .slider.round:before {
+    transform: translateX(26px);
+}
+
 
 .toggle-switch {
     position: relative;
@@ -225,6 +328,7 @@ input:checked + .toggle-slider:before {
 
 .canvas-container {
     position: relative;
+    position: relative;
     background: white;
     padding: var(--spacing);
     border-radius: var(--border-radius);
@@ -266,6 +370,8 @@ input:checked + .toggle-slider:before {
     font-size: 16px;
     transition: background-color 0.3s ease;
     box-shadow: 0 1px 3px rgba(52, 152, 219, 0.08);
+    width: auto !important;
+    min-width: 120px;
 }
 
 .btn:hover {
@@ -273,8 +379,13 @@ input:checked + .toggle-slider:before {
 }
 
 .card-btn-row {
-    margin-top: auto;
-    padding: 18px 14px;
+    display: flex !important;
+    flex-direction: row;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 @media (max-width: 768px) {
@@ -343,6 +454,30 @@ input:checked + .toggle-slider:before {
     width: 100%;
 }
 
+#face-generator-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 350px;
+    height: 100%;
+}
+
+#face-generator-container .center-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}
+
+#face-generator-container .card-btn-row {
+
+
+
+
+
 #drawYourCardBtn, #drawRandomCardBtn, #drawOppositeCardBtn {
     background: var(--secondary-color);
     color: white;
@@ -355,7 +490,7 @@ input:checked + .toggle-slider:before {
     background: #2980b9;
     color: white;
 }
-}
+
 
     .svg-art svg {
         filter: drop-shadow(0 0 10px cyan);
@@ -390,7 +525,6 @@ input:checked + .toggle-slider:before {
     .btn {
         width: 100%;
     }
-}
 
 /* Info Panel Styles */
 .info-panel {
@@ -406,6 +540,106 @@ input:checked + .toggle-slider:before {
     overflow: hidden;
 }
 
+/* Quantum Mode Info Modal Overlay */
+.quantum-info-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(22, 34, 54, 0.66);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: quantumOverlayFadeIn 0.3s;
+}
+@keyframes quantumOverlayFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.quantum-info-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2100;
+    width: 320px;
+    max-width: 92vw;
+    background: #111e2e;
+    color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0,0,0,0.36);
+    padding: 0;
+    display: block;
+    animation: quantumModalPop 0.22s cubic-bezier(.4,0,.2,1);
+}
+
+.quantum-info-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(22, 34, 54, 0.66);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: quantumOverlayFadeIn 0.3s;
+}
+@keyframes quantumModalPop {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.quantum-info-modal .info-header {
+    background: linear-gradient(90deg, #2b6cb0 0%, #38b2ac 100%);
+    color: #fff;
+    padding: 14px 18px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    font-size: 1.1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quantum-info-modal .close-btn {
+    color: #fff;
+    font-size: 1.5em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 2px;
+    line-height: 1;
+}
+
+.quantum-info-modal .info-content {
+    padding: 18px 20px 20px 20px;
+    background: #172a3a;
+}
+
+.quantum-info-modal .info-content p {
+    margin: 10px 0;
+    font-size: 1.07em;
+    color: #e3eaf4;
+    word-break: break-word;
+}
+
+@media (max-width: 600px) {
+    .quantum-info-modal {
+        width: 96vw;
+        max-width: 98vw;
+        padding: 0;
+    }
+    .quantum-info-modal .info-content {
+        padding: 12px 6vw 18px 6vw;
+    }
+}
+
+
 .info-header {
     display: flex;
     justify-content: space-between;
@@ -418,6 +652,7 @@ input:checked + .toggle-slider:before {
 .info-header h3 {
     margin: 0;
     font-size: 16px;
+    text-align: center;
 }
 
 .close-btn {
@@ -546,4 +781,5 @@ input:checked + .toggle-slider:before {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-} 
+} }
+}

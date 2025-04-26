@@ -499,53 +499,10 @@ function drawSignalOrbit(D = 50, A = 50, S = 50) {
   }
 
   // Legend popup logic (like Archetype Landscape)
-  function showSignalOrbitLegendPopup() {
-    const visualCanvas = getVisualizerCanvas();
-    showLegendPopupUniversal({
-      id: 'orbit-legend-popup',
-      html: `
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
-          <b style="font-size:1.09em;">Signal Orbit Legend</b>
-          <button id="closeOrbitLegend" style="background:none;border:none;color:#fff;font-size:18px;cursor:pointer;">×</button>
-        </div>
-        <div style="margin:9px 0 0 0;line-height:1.7">
-          <span style="color:#ffe600">●</span> <b>Center:</b> Everyperson<br>
-          <span style="color:#39f">●</span> <b>You:</b> Your current position (D, A)<br>
-          <span style="color:#f44">●</span> <b>Opposite:</b> Reflection (100-D, 100-A)<br>
-          <span style="color:#fff8">◯</span> <b>Orbits:</b> Self, Growth, Influence<br>
-          <span style="color:#fff8">—</span> <b>Axes:</b> Density (left-right), Awareness (bottom-top)
-        </div>
-      `,
-      style: {
-        position: 'absolute',
-        top: visualCanvas.getBoundingClientRect().top + window.scrollY + 12 + 'px',
-        left: visualCanvas.getBoundingClientRect().left + window.scrollX + visualCanvas.width - 210 + 'px',
-        background: 'rgba(24,28,34,0.97)',
-        color: '#fff',
-        padding: '14px 18px 10px 18px',
-        borderRadius: '12px',
-        boxShadow: '0 2px 16px #0008',
-        fontSize: '15px',
-        zIndex: 1000
-      },
-      closeBtnId: 'closeOrbitLegend'
-    });
-  }
-  function hideLegendPopup() {
-    let legend = document.getElementById('orbit-legend-popup');
-    if (legend) legend.remove();
-  }
 
-  visualCanvas.addEventListener('click', function(e) {
-    const rect = visualCanvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const cx = visualCanvas.width-28, cy = 28, r = 16;
-    if (Math.pow(x-cx,2) + Math.pow(y-cy,2) < r*r) {
-      let legend = document.getElementById('orbit-legend-popup');
-      if (legend) { hideLegendPopup(); } else { showLegendPopup(); }
-    }
-  });
+
+
+
 
   function animate() {
     // Always fetch latest slider values
@@ -670,16 +627,7 @@ function drawSignalOrbit(D = 50, A = 50, S = 50) {
         ctx.globalAlpha = 1;
       }
     }
-    // --- Legend '?' icon ---
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(visualCanvas.width-28, 28, 16, 0, Math.PI*2);
-    ctx.fillStyle = '#222a';
-    ctx.fill();
-    ctx.font = 'bold 20px sans-serif';
-    ctx.fillStyle = '#fff';
-    ctx.fillText('?', visualCanvas.width-34, 35);
-    ctx.restore();
+
 
     ctx.font = 'bold 18px sans-serif';
     ctx.fillStyle = '#fff';
@@ -816,18 +764,19 @@ window.addEventListener("load", () => {
   updateMainMode();
 
     // Visualizer Help ('?') button logic
-  const helpBtn = document.getElementById("visualizerHelpBtn");
+  
   const mainModeSelect = document.getElementById("mainModeSelect");
   const visualModeSelect = document.getElementById("visualModeSelect");
 
+  const helpBtn = document.getElementById('helpBtn');
   function updateHelpBtnVisibility() {
-    helpBtn.style.display = (mainModeSelect.value === "visualizer") ? "inline-block" : "none";
+    if (typeof helpBtn !== 'undefined' && helpBtn) helpBtn.style.display = (mainModeSelect.value === "visualizer") ? "inline-block" : "none";
   }
   mainModeSelect.addEventListener("change", updateHelpBtnVisibility);
   updateHelpBtnVisibility();
 
   if (helpBtn) {
-    helpBtn.onclick = function() {
+    if (typeof helpBtn !== 'undefined' && helpBtn) helpBtn.onclick = function() {
       // Hide all legend popups first
       if (drawArchetypeLandscape.animate && typeof drawArchetypeLandscape.animate.hideLegendPopup === "function") drawArchetypeLandscape.animate.hideLegendPopup();
       if (drawSignalOrbit && typeof drawSignalOrbit.hideLegendPopup === "function") drawSignalOrbit.hideLegendPopup();

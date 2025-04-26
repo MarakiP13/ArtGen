@@ -58,12 +58,18 @@
                 </div>
                 
                 <div class="quantum-toggle">
-                    <span class="quantum-label">Quantum Mode</span>
-                    <div class="toggle-switch">
-  <label>
-    <input type="checkbox" id="quantumMode">
-    <span class="toggle-slider"></span>
-  </label>
+    <label class="switch">
+        <input type="checkbox" id="quantumModeToggle">
+        <span class="slider round"></span>
+    </label>
+    <span style="margin-left: 12px; font-weight: 500;">Quantum Mode</span>
+
+    <label class="switch" style="margin-top: 18px;">
+        <input type="checkbox" id="meditationModeToggle">
+        <span class="slider round"></span>
+    </label>
+    <span style="margin-left: 12px; font-weight: 500;">Guided Meditation Mode</span>
+    <div id="meditationPrompt" style="margin-top: 1em; font-size: 1.2em; color: #3a3a3a; min-height: 2em;"></div>
 </div>
                 </div>
                 
@@ -89,7 +95,7 @@
                   <option value="visualizer">Consciousness Visualizer</option>
                 </select>
             </div>
-            <button id="visualizerHelpBtn" class="icon-btn" title="Show legend / help for this visualization" style="margin-left:8px;display:inline-block;vertical-align:middle;width:36px;height:36px;border-radius:50%;font-size:1.5em;line-height:1;background:#f3f3f3;color:#333;border:1px solid #ccc;box-shadow:0 1px 3px rgba(0,0,0,0.06);cursor:pointer;">?</button>
+            
 <div class="white-box" id="visualizerPanelMount" style="display:none;"></div>
             <div class="white-box" id="artCanvasBox">
                 <div class="canvas-container">
@@ -99,7 +105,7 @@
 
             <!-- Visualization Mode UI Hint -->
             <div style="margin: 12px 0 28px 0; text-align: center; color: #555; font-size: 1em;">
-                <strong>New:</strong> Try <em>3D Model Export</em> to preview and (soon) export your consciousness as a 3D-printable model, or <em>Quantum Visualization</em> for unpredictable, quantum-inspired art!
+                <strong>New:</strong> Try <em>3D Model Export</em> to preview and (soon) export your consciousness as a 3D-printable model!
             </div>
 
             <div class="generators-grid">
@@ -117,12 +123,15 @@
                 </div>
                 <!-- Bottom Left: Placeholder for future generator -->
                 <div class="controls grid-cell" id="face-generator-container">
+  <div class="center-wrapper">
     <h3>Consciousness Face Generator</h3>
-    <div class="card-btn-row" style="margin-bottom:18px;">
+    <div class="card-btn-row">
       <button id="downloadAvatarBtn" class="btn">Download Avatar</button>
       <button id="showOriginalBtn" class="btn">Show Original</button>
     </div>
-    <!-- The consciousness_face.js script will inject the face avatar here -->
+    <div id="faceAvatar" style="margin-top:24px; text-align:center;"></div>
+  </div>
+
 </div>
                 <!-- Bottom Right: Placeholder for future generator -->
                 <div class="controls grid-cell" id="task-matcher-container">

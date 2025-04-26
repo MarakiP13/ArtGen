@@ -1,36 +1,87 @@
 // Canvas setup
 const canvas = document.getElementById('artCanvas');
-const ctx = canvas.getContext('2d');
+let ctx = null;
+if (canvas) {
+    ctx = canvas.getContext('2d');
+}
 
 // Set canvas size
 function resizeCanvas() {
+    if (!canvas) return;
     const container = canvas.parentElement;
-    canvas.width = container.offsetWidth - 40; // Adjust for padding
+    if (container) {
+        canvas.width = container.offsetWidth - 40; // Adjust for padding
+        canvas.height = 400; // Fixed height
+        
+        // Redraw after resize
+        if (informationDensity && knowledgeBase && cognitiveComplexity) {
+            drawArt(
+                parseInt(informationDensity.value),
+                parseInt(knowledgeBase.value),
+                parseInt(cognitiveComplexity.value)
+            );
+        }
+    }
     canvas.height = 400; // Fixed height
     
     // Redraw after resize
-    drawArt(
-        parseInt(informationDensity.value),
-        parseInt(knowledgeBase.value),
-        parseInt(cognitiveComplexity.value)
-    );
+    if (informationDensity && knowledgeBase && cognitiveComplexity) {
+        drawArt(
+            parseInt(informationDensity.value),
+            parseInt(knowledgeBase.value),
+            parseInt(cognitiveComplexity.value)
+        );
+    }
 }
 
 // Initialize canvas size
 window.addEventListener('load', () => {
     resizeCanvas();
     // Initial draw
-    drawArt(
-        parseInt(informationDensity.value),
-        parseInt(knowledgeBase.value),
-        parseInt(cognitiveComplexity.value)
-    );
-    updateArchetypeDisplay(); // Ensure archetype message is shown on load
+    if (informationDensity && knowledgeBase && cognitiveComplexity) {
+        drawArt(
+            parseInt(informationDensity.value),
+            parseInt(knowledgeBase.value),
+            parseInt(cognitiveComplexity.value)
+        );
+    }
+    if (typeof updateArchetypeDisplay === 'function') updateArchetypeDisplay(); // Ensure archetype message is shown on load
 });
 
 
 
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener('resize', () => {
+    resizeCanvas();
+    // If meditation mode is active, regenerate the static meditation background
+    if (meditationModeToggle && meditationModeToggle.checked) {
+        // Recreate static background
+        const D = parseInt(informationDensity.value);
+        const A = parseInt(knowledgeBase.value);
+        const S = parseInt(cognitiveComplexity.value);
+        window.staticMeditationBg = document.createElement('canvas');
+        window.staticMeditationBg.width = canvas.width;
+        window.staticMeditationBg.height = canvas.height;
+        const bgCtx = window.staticMeditationBg.getContext('2d');
+        // Draw only the static background (gradient and points, not circles)
+        const gradient = bgCtx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        gradient.addColorStop(0, `hsl(${D * 3.6}, ${A}%, ${S}%)`);
+        gradient.addColorStop(1, `hsl(${(D * 3.6 + 180) % 360}, ${A}%, ${S}%)`);
+        bgCtx.fillStyle = gradient;
+        bgCtx.fillRect(0, 0, canvas.width, canvas.height);
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const maxRadius = Math.min(canvas.width, canvas.height) * 0.4;
+        for (let i = 0; i < D / 5; i++) {
+            const angle = (i / (D / 5)) * Math.PI * 2;
+            const x = centerX + Math.cos(angle) * maxRadius;
+            const y = centerY + Math.sin(angle) * maxRadius;
+            bgCtx.beginPath();
+            bgCtx.arc(x, y, 5, 0, Math.PI * 2);
+            bgCtx.fillStyle = `rgba(255, 255, 255, ${0.3 + (A / 100) * 0.7})`;
+            bgCtx.fill();
+        }
+    }
+});
 
 // Get DOM elements
 const informationDensity = document.getElementById('informationDensity');
@@ -39,7 +90,12 @@ const cognitiveComplexity = document.getElementById('cognitiveComplexity');
 const csciValue = document.getElementById('csciValue');
 const saveArtBtn = document.getElementById('saveBtn');
 const shareBtn = document.getElementById('shareBtn');
-const quantumMode = document.getElementById('quantumMode');
+const quantumModeToggle = document.getElementById('quantumModeToggle');
+const meditationModeToggle = document.getElementById('meditationModeToggle');
+const meditationPrompt = document.getElementById('meditationPrompt');
+
+// Use quantumModeToggle as the main toggle
+let quantumMode = quantumModeToggle || document.getElementById('quantumMode');
 
 // Interactive elements state
 let interactiveElements = [];
@@ -48,26 +104,66 @@ let infoPanel = null;
 
 // Create info panel
 function createInfoPanel() {
+    // If quantum mode is active, show as modal pop-up
+    const isQuantum = quantumModeToggle && quantumModeToggle.checked;
     infoPanel = document.createElement('div');
-    infoPanel.className = 'info-panel';
-    infoPanel.innerHTML = `
-        <div class="info-header">
-            <h3>Element Information</h3>
-            <button class="close-btn">&times;</button>
-        </div>
-        <div class="info-content">
-            <p id="elementType">Type: </p>
-            <p id="elementValue">Value: </p>
-            <p id="elementDescription">Description: </p>
-        </div>
-    `;
-    document.querySelector('.canvas-container').appendChild(infoPanel);
-    
-    // Add close button functionality
-    infoPanel.querySelector('.close-btn').addEventListener('click', () => {
-        infoPanel.style.display = 'none';
-        selectedElement = null;
-    });
+    if (isQuantum) {
+        infoPanel.className = 'quantum-info-modal';
+        infoPanel.innerHTML = `
+            <div class="info-header">
+                <h3>Element Information</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="info-content">
+                <p id="elementType">Type: </p>
+                <p id="elementValue">Value: </p>
+                <p id="elementDescription">Description: </p>
+            </div>
+        `;
+        // Remove any existing overlay
+        let oldOverlay = document.querySelector('.quantum-info-overlay');
+        if (oldOverlay) oldOverlay.remove();
+        // Modal overlay
+        let overlay = document.createElement('div');
+        overlay.className = 'quantum-info-overlay';
+        const canvasContainer = document.querySelector('#artCanvasBox .canvas-container');
+        if (canvasContainer) {
+            canvasContainer.appendChild(overlay);
+            overlay.appendChild(infoPanel);
+        }
+        // Close on overlay click
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
+                infoPanel = null;
+                selectedElement = null;
+            }
+        });
+        // Close on button
+        infoPanel.querySelector('.close-btn').addEventListener('click', () => {
+            overlay.remove();
+            infoPanel = null;
+            selectedElement = null;
+        });
+    } else {
+        infoPanel.className = 'info-panel';
+        infoPanel.innerHTML = `
+            <div class="info-header">
+                <h3>Element Information</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="info-content">
+                <p id="elementType">Type: </p>
+                <p id="elementValue">Value: </p>
+                <p id="elementDescription">Description: </p>
+            </div>
+        `;
+        document.querySelector('.canvas-container').appendChild(infoPanel);
+        infoPanel.querySelector('.close-btn').addEventListener('click', () => {
+            infoPanel.style.display = 'none';
+            selectedElement = null;
+        });
+    }
 }
 
 // Show info panel for selected element
@@ -754,8 +850,9 @@ function drawWaves() {
 
 // Generate art based on parameters
 function drawArt(D, A, S) {
+    if (!ctx || !canvas) return;
     const csci = calculateCSCI(D, A, S);
-    csciValue.textContent = csci.toFixed(3);
+    if (csciValue) csciValue.textContent = csci.toFixed(3);
     
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -763,7 +860,7 @@ function drawArt(D, A, S) {
     // Clear interactive elements
     interactiveElements = [];
     
-    if (quantumMode.checked) {
+    if (quantumMode && quantumMode.checked) {
         // Quantum visualization mode
         // Initialize particles if needed
         if (quantumState.particles.length === 0) {
@@ -1229,8 +1326,9 @@ if (invertToggle) {
 }
 
 // Event listener for quantum mode toggle
-quantumMode.addEventListener('change', () => {
-    if (quantumMode.checked) {
+if (quantumModeToggle) quantumModeToggle.addEventListener('change', () => {
+    if (quantumModeToggle.checked) {
+        quantumMode = quantumModeToggle;
         // Reset quantum state when enabling
         quantumState.particles = [];
         quantumState.vortices = [];
@@ -1250,6 +1348,11 @@ quantumMode.addEventListener('change', () => {
             cancelAnimationFrame(animationFrameId);
             animationFrameId = null;
         }
+        // Remove quantum info modal if present
+        const quantumOverlay = document.querySelector('.quantum-info-overlay');
+        if (quantumOverlay) quantumOverlay.remove();
+        infoPanel = null;
+        selectedElement = null;
         // Draw once when disabling
         drawArt(
             parseInt(informationDensity.value),
@@ -1259,21 +1362,281 @@ quantumMode.addEventListener('change', () => {
     }
 });
 
+// Meditation Mode Toggle logic
+let meditationInterval = null;
+const meditationPrompts = [
+    "Take a deep breath. Focus on the present moment. Let your thoughts flow and observe your consciousness as it is.",
+    "Notice the sensation of your breath entering and leaving your body.",
+    "Let any tension in your body melt away with each exhale.",
+    "If your mind wanders, gently bring your attention back to your breath.",
+    "Feel gratitude for this moment of stillness and clarity.",
+    "With each breath, become more aware of your inner world.",
+    "Allow yourself to simply be, without judgment or expectation."
+];
+
+function addMeditationOverlay() {
+    const container = document.querySelector('.canvas-container');
+    if (!container) return;
+    if (!container.querySelector('.meditation-overlay')) {
+        const overlay = document.createElement('div');
+        overlay.className = 'meditation-overlay';
+        container.appendChild(overlay);
+    }
+}
+function removeMeditationOverlay() {
+    const container = document.querySelector('.canvas-container');
+    if (!container) return;
+    const overlay = container.querySelector('.meditation-overlay');
+    if (overlay) overlay.remove();
+}
+function dimOtherUI(dim) {
+    // Overlay approach: add/remove a full-page dim overlay, and exempt the meditation toggle and its label
+    let overlay = document.querySelector('.meditation-dim-overlay');
+    if (dim) {
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'meditation-dim-overlay';
+            document.body.appendChild(overlay);
+        }
+        overlay.classList.remove('hide');
+        // Exempt the meditation toggle and its label/span
+        const meditationToggle = document.getElementById('meditationModeToggle');
+        if (meditationToggle) {
+            meditationToggle.classList.add('meditation-dim-exempt');
+            // Exempt the label and the span next to it (Guided Meditation Mode)
+            const label = meditationToggle.closest('label');
+            if (label) label.classList.add('meditation-dim-exempt');
+            // Exempt the span after the label (the text label)
+            if (label && label.nextElementSibling && label.nextElementSibling.tagName === 'SPAN') {
+                label.nextElementSibling.classList.add('meditation-dim-exempt');
+            }
+        }
+    } else {
+        if (overlay) {
+            overlay.classList.add('hide');
+            setTimeout(() => { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 600);
+        }
+        // Remove exemption
+        const meditationToggle = document.getElementById('meditationModeToggle');
+        if (meditationToggle) {
+            meditationToggle.classList.remove('meditation-dim-exempt');
+            const label = meditationToggle.closest('label');
+            if (label) label.classList.remove('meditation-dim-exempt');
+            if (label && label.nextElementSibling && label.nextElementSibling.tagName === 'SPAN') {
+                label.nextElementSibling.classList.remove('meditation-dim-exempt');
+            }
+        }
+    }
+}
+
+
+
+// Store the chosen meditation voice
+let meditationVoice = null;
+// Speak meditation prompt using Web Speech API
+function speakMeditationPrompt(text) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel(); // Stop any ongoing speech
+    const utter = new SpeechSynthesisUtterance(text);
+    if (meditationVoice) {
+        utter.voice = meditationVoice;
+    } else {
+        // Fallback: pick a calm voice if not set
+        const voices = window.speechSynthesis.getVoices();
+        utter.voice = voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) ||
+                      voices.find(v => v.lang.startsWith('en')) ||
+                      voices[0];
+    }
+    utter.rate = 0.92;
+    utter.pitch = 1.02;
+    utter.volume = 0.85;
+    window.speechSynthesis.speak(utter);
+} 
+
+function startMeditationPrompts() {
+    let idx = 0;
+    meditationPrompt.textContent = meditationPrompts[idx];
+    speakMeditationPrompt(meditationPrompts[idx]);
+    meditationInterval = setInterval(() => {
+        idx = (idx + 1) % meditationPrompts.length;
+        meditationPrompt.textContent = meditationPrompts[idx];
+        speakMeditationPrompt(meditationPrompts[idx]);
+    }, 10000);
+}
+function stopMeditationPrompts() {
+    if (meditationInterval) clearInterval(meditationInterval);
+    meditationInterval = null;
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    meditationVoice = null;
+}
+
+let meditationAnimId = null;
+let meditationAnimStart = null;
+
+// --- Meditation Animation: Spiral Animation ---
+function meditationArtAnimate(ts) {
+    if (!meditationModeToggle.checked) return;
+    if (!meditationAnimStart) meditationAnimStart = ts;
+    const elapsed = (ts - meditationAnimStart) / 1000;
+
+    // Draw static background from offscreen buffer
+    if (window.staticMeditationBg) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(window.staticMeditationBg, 0, 0);
+    }
+
+    // Spiral parameters
+    const D = parseInt(informationDensity.value);
+    const A = parseInt(knowledgeBase.value);
+    const S = parseInt(cognitiveComplexity.value);
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const spiralArms = Math.max(2, Math.floor(S / 20));
+    const spiralPoints = Math.max(30, D + 20);
+    const spiralLength = Math.max(1.5, 2.5 - A / 100); // Lower A = longer spiral
+    const spiralMaxRadius = Math.min(canvas.width, canvas.height) * 0.38;
+    const spiralSpeed = 0.22 + (A / 400); // Higher A = slightly faster
+    
+    // Animate spiral: points move along spiral arms, phase-shifted for a flowing effect
+    for (let arm = 0; arm < spiralArms; arm++) {
+        for (let i = 0; i < spiralPoints; i++) {
+            const t = (i / spiralPoints) * spiralLength * Math.PI * 2;
+            // Animate the spiral by shifting t with time and arm index
+            const phase = elapsed * spiralSpeed + arm * (Math.PI * 2 / spiralArms);
+            const spiralT = t + phase;
+            const r = (i / spiralPoints) * spiralMaxRadius;
+            const x = centerX + Math.cos(spiralT) * r;
+            const y = centerY + Math.sin(spiralT) * r;
+            ctx.beginPath();
+            ctx.arc(x, y, 6 - 3 * (i / spiralPoints), 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${0.18 + 0.32 * (1 - i / spiralPoints)})`;
+            ctx.shadowColor = `rgba(180, 220, 255, 0.18)`;
+            ctx.shadowBlur = 10 * (1 - i / spiralPoints);
+            ctx.fill();
+        }
+    }
+    ctx.shadowBlur = 0;
+    meditationAnimId = requestAnimationFrame(meditationArtAnimate);
+}
+
+
+
+if (meditationModeToggle && meditationPrompt) {
+    meditationModeToggle.addEventListener('change', () => {
+        if (!meditationModeToggle.checked) {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel(); // Stop voice immediately
+        }
+        if (meditationModeToggle.checked) {
+            // Wait for voices to be loaded and then start meditation prompts with a consistent voice
+            function setVoiceAndStartPrompts() {
+                const voices = window.speechSynthesis.getVoices();
+                meditationVoice = voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) ||
+                                  voices.find(v => v.lang.startsWith('en')) ||
+                                  voices[0];
+                addMeditationOverlay();
+                dimOtherUI(true);
+                startMeditationPrompts();
+            }
+            if ('speechSynthesis' in window) {
+                const voices = window.speechSynthesis.getVoices();
+                if (voices.length === 0) {
+                    // Voices not loaded yet, wait for event
+                    window.speechSynthesis.onvoiceschanged = function() {
+                        setVoiceAndStartPrompts();
+                        window.speechSynthesis.onvoiceschanged = null;
+                    };
+                    // Trigger voice loading
+                    window.speechSynthesis.getVoices();
+                } else {
+                    setVoiceAndStartPrompts();
+                }
+            } else {
+                meditationVoice = null;
+                addMeditationOverlay();
+                dimOtherUI(true);
+                startMeditationPrompts();
+            }
+            addMeditationOverlay();
+            dimOtherUI(true);
+            startMeditationPrompts();
+            // --- Render static background to offscreen canvas ---
+            const D = parseInt(informationDensity.value);
+            const A = parseInt(knowledgeBase.value);
+            const S = parseInt(cognitiveComplexity.value);
+            window.staticMeditationBg = document.createElement('canvas');
+            window.staticMeditationBg.width = canvas.width;
+            window.staticMeditationBg.height = canvas.height;
+            const bgCtx = window.staticMeditationBg.getContext('2d');
+            // Draw only the static background (gradient and points, not circles)
+            // Replicate background logic from drawArt
+            const gradient = bgCtx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, `hsl(${D * 3.6}, ${A}%, ${S}%)`);
+            gradient.addColorStop(1, `hsl(${(D * 3.6 + 180) % 360}, ${A}%, ${S}%)`);
+            bgCtx.fillStyle = gradient;
+            bgCtx.fillRect(0, 0, canvas.width, canvas.height);
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const maxRadius = Math.min(canvas.width, canvas.height) * 0.4;
+            // Draw points (information density patterns)
+            for (let i = 0; i < D / 5; i++) {
+                const angle = (i / (D / 5)) * Math.PI * 2;
+                const x = centerX + Math.cos(angle) * maxRadius;
+                const y = centerY + Math.sin(angle) * maxRadius;
+                bgCtx.beginPath();
+                bgCtx.arc(x, y, 5, 0, Math.PI * 2);
+                bgCtx.fillStyle = `rgba(255, 255, 255, ${0.3 + (A / 100) * 0.7})`;
+                bgCtx.fill();
+            }
+            meditationAnimStart = null;
+            if (meditationAnimId) cancelAnimationFrame(meditationAnimId);
+            meditationAnimId = requestAnimationFrame(meditationArtAnimate);
+        } else {
+            // Voice already stopped above
+            removeMeditationOverlay();
+            dimOtherUI(false);
+            stopMeditationPrompts();
+            meditationPrompt.textContent = "";
+            // Stop meditation art animation
+            if (meditationAnimId) cancelAnimationFrame(meditationAnimId);
+            meditationAnimId = null;
+            meditationAnimStart = null;
+            window.staticMeditationBg = null;
+            // Redraw static art
+            ctx.save();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.filter = 'none';
+            ctx.setTransform(1,0,0,1,0,0);
+            drawArt(
+                parseInt(informationDensity.value),
+                parseInt(knowledgeBase.value),
+                parseInt(cognitiveComplexity.value)
+            );
+            ctx.restore();
+        }
+    });
+}
+
+
+
 // Save artwork
-saveBtn.addEventListener('click', () => {
-    const link = document.createElement('a');
-    link.download = 'consciousness-art.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-});
+if (saveBtn && canvas) {
+    saveBtn.addEventListener('click', () => {
+        const link = document.createElement('a');
+        link.download = 'consciousness-art.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
+}
 
 // Share artwork
-shareBtn.addEventListener('click', () => {
-    const imageData = canvas.toDataURL('image/png');
-    const tweetText = "Check out my consciousness art generated with ConsciousCanvas!";
-    const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
-    window.open(tweetUrl, '_blank');
-});
+if (shareBtn && canvas) {
+    shareBtn.addEventListener('click', () => {
+        const imageData = canvas.toDataURL('image/png');
+        const tweetText = "Check out my consciousness art generated with ConsciousCanvas!";
+        const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+        window.open(tweetUrl, '_blank');
+    });
+}
 
 // Add loading indicator
 const loadingIndicator = document.createElement('div');
